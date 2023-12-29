@@ -15,6 +15,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+//        bookRepository.deleteAll();
         var bookD = new Book("Design Patterns 2", "123452", "$ome1Else");
         System.out.println("Id: " + bookD.getId());
 
