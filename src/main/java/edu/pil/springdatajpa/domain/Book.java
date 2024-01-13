@@ -15,7 +15,7 @@ import java.util.Objects;
 @Table(name = "books" /*, schema = "my_schema"*/)
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String isbn;
