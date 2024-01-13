@@ -29,7 +29,7 @@ class SpringDataJpaApplicationTests {
     void testJpaTestSplice() {
         var quantityBefore = bookRepository.count();
         System.out.println("======================> quantityBefore -> " + quantityBefore);
-        bookRepository.save(new Book("My new book2", "123456", "John Thomson2"));
+        bookRepository.save(new Book("My new book2", "123456", "John Thomson2", 2L));
         var quantityAfter = bookRepository.count();
         System.out.println("======================> quantityAfter -> " + quantityAfter);
         assertThat(quantityBefore).isLessThan(quantityAfter);
