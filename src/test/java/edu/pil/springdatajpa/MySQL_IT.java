@@ -1,8 +1,10 @@
 package edu.pil.springdatajpa;
 
 import edu.pil.springdatajpa.domain.AuthorUuid;
+import edu.pil.springdatajpa.domain.BookNatural;
 import edu.pil.springdatajpa.domain.BookUuid;
 import edu.pil.springdatajpa.repositories.AuthorUuidRepository;
+import edu.pil.springdatajpa.repositories.BookNaturalRepository;
 import edu.pil.springdatajpa.repositories.BookRepository;
 import edu.pil.springdatajpa.repositories.BookUuidRepository;
 import org.junit.jupiter.api.MethodOrderer;
@@ -27,6 +29,8 @@ public class MySQL_IT {
     BookUuidRepository bookUuidRepository;
     @Autowired
     AuthorUuidRepository authorUuidRepository;
+    @Autowired
+    BookNaturalRepository bookNaturalRepository;
     @Test
     @Order(2)
     void testQuantity() {
@@ -44,5 +48,12 @@ public class MySQL_IT {
         var bookUuid = new BookUuid();
         bookUuidRepository.save(bookUuid);
         assertThat(bookUuidRepository.getReferenceById(bookUuid.getId())).isNotNull();
+    }
+    @Test
+    void testBookNaturalTest() {
+        var bookNatural = new BookNatural();
+        bookNatural.setTitle("My new hobby");
+        bookNaturalRepository.save(bookNatural);
+        assertThat(bookNaturalRepository.getReferenceById(bookNatural.getTitle())).isNotNull();
     }
 }
