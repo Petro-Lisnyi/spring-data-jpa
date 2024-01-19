@@ -4,6 +4,7 @@ import edu.pil.springdatajpa.domain.AuthorUuid;
 import edu.pil.springdatajpa.domain.BookNatural;
 import edu.pil.springdatajpa.domain.BookUuid;
 import edu.pil.springdatajpa.domain.composite.AuthorComposite;
+import edu.pil.springdatajpa.domain.composite.AuthorEmbedded;
 import edu.pil.springdatajpa.domain.composite.NameId;
 import edu.pil.springdatajpa.repositories.*;
 import org.junit.jupiter.api.MethodOrderer;
@@ -32,6 +33,8 @@ public class MySQL_IT {
     BookNaturalRepository bookNaturalRepository;
     @Autowired
     AuthorCompositeRepository authorCompositeRepository;
+    @Autowired
+    AuthorEmbeddedRepository authorEmbeddedRepository;
 
     @Test
     @Order(2)
@@ -73,6 +76,16 @@ public class MySQL_IT {
         var saved = authorCompositeRepository.save(authorComposite);
         assertThat(saved).isNotNull();
         var fetched = authorCompositeRepository.getReferenceById(nameId);
+        assertThat(fetched).isNotNull();
+    }
+    @Test
+    void authorEmbeddedTest() {
+        var nameId = new NameId("John", "Wall");
+        var authorComposite = new AuthorEmbedded(nameId);
+        authorComposite.setCountry("UK");
+        var saved = authorEmbeddedRepository.save(authorComposite);
+        assertThat(saved).isNotNull();
+        var fetched = authorEmbeddedRepository.getReferenceById(nameId);
         assertThat(fetched).isNotNull();
     }
 }
