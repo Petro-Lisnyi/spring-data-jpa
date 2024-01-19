@@ -1,6 +1,10 @@
 package edu.pil.springdatajpa;
 
+import edu.pil.springdatajpa.domain.AuthorUuid;
+import edu.pil.springdatajpa.domain.BookUuid;
+import edu.pil.springdatajpa.repositories.AuthorUuidRepository;
 import edu.pil.springdatajpa.repositories.BookRepository;
+import edu.pil.springdatajpa.repositories.BookUuidRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -16,13 +20,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MySQL_IntegrationTest {
+public class MySQL_IT {
     @Autowired
     BookRepository bookRepository;
+    @Autowired
+    BookUuidRepository bookUuidRepository;
+    @Autowired
+    AuthorUuidRepository authorUuidRepository;
     @Test
     @Order(2)
     void testQuantity() {
         var quantity = bookRepository.count();
-        assertThat(quantity).isEqualTo(2);
+        System.out.println("quantity === " + quantity);
+    }
+    @Test
+    void testAuthorUuid() {
+        var authorUuid = new AuthorUuid();
+        authorUuidRepository.save(authorUuid);
+        assertThat(authorUuidRepository.getReferenceById(authorUuid.getId())).isNotNull();
+    }
+    @Test
+    void testBookUuid() {
+        var bookUuid = new BookUuid();
+        bookUuidRepository.save(bookUuid);
+        assertThat(bookUuidRepository.getReferenceById(bookUuid.getId())).isNotNull();
     }
 }

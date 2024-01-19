@@ -24,7 +24,6 @@ public class BookUuid {
     private String isbn;
     private String publisher;
 
-
     public BookUuid() {
     }
 
