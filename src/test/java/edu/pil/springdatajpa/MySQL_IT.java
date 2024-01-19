@@ -3,10 +3,9 @@ package edu.pil.springdatajpa;
 import edu.pil.springdatajpa.domain.AuthorUuid;
 import edu.pil.springdatajpa.domain.BookNatural;
 import edu.pil.springdatajpa.domain.BookUuid;
-import edu.pil.springdatajpa.repositories.AuthorUuidRepository;
-import edu.pil.springdatajpa.repositories.BookNaturalRepository;
-import edu.pil.springdatajpa.repositories.BookRepository;
-import edu.pil.springdatajpa.repositories.BookUuidRepository;
+import edu.pil.springdatajpa.domain.composite.AuthorComposite;
+import edu.pil.springdatajpa.domain.composite.NameId;
+import edu.pil.springdatajpa.repositories.*;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -31,29 +30,49 @@ public class MySQL_IT {
     AuthorUuidRepository authorUuidRepository;
     @Autowired
     BookNaturalRepository bookNaturalRepository;
+    @Autowired
+    AuthorCompositeRepository authorCompositeRepository;
+
     @Test
     @Order(2)
     void testQuantity() {
         var quantity = bookRepository.count();
         System.out.println("quantity === " + quantity);
     }
+
     @Test
     void testAuthorUuid() {
         var authorUuid = new AuthorUuid();
         authorUuidRepository.save(authorUuid);
         assertThat(authorUuidRepository.getReferenceById(authorUuid.getId())).isNotNull();
     }
+
     @Test
     void testBookUuid() {
         var bookUuid = new BookUuid();
         bookUuidRepository.save(bookUuid);
         assertThat(bookUuidRepository.getReferenceById(bookUuid.getId())).isNotNull();
     }
+
     @Test
-    void testBookNaturalTest() {
+    void bookNaturalTest() {
         var bookNatural = new BookNatural();
         bookNatural.setTitle("My new hobby");
         bookNaturalRepository.save(bookNatural);
         assertThat(bookNaturalRepository.getReferenceById(bookNatural.getTitle())).isNotNull();
+    }
+
+    @Test
+    void authorCompositeTest() {
+        var nameId = new NameId("John", "Wall");
+
+        var authorComposite = new AuthorComposite();
+        authorComposite.setFirstName(nameId.getFirstName());
+        authorComposite.setLastName(nameId.getLastName());
+        authorComposite.setCountry("UK");
+        var saved = authorCompositeRepository.save(authorComposite);
+        assertThat(saved).isNotNull();
+        var fetched = authorCompositeRepository.getReferenceById(nameId);
+        assertThat(fetched).isNotNull();
     }
 }
