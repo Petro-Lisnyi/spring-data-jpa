@@ -8,4 +8,5 @@ public interface AuthorDao {
 
     Author saveAuthor(Author author);
 
+    Author updateAuthor(Author saved);
 }

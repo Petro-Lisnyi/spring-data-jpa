@@ -47,4 +47,16 @@ public class AuthorDaoIntegrationTest {
 
         System.out.println("fetchedAuthor.getId() = " + fetchedAuthor.getId());
     }
+    @Test
+    void updateAuthorTest() {
+        var author = new Author();
+        author.setFirstName("tom");
+        author.setLastName("C");
+
+        var saved = authorDao.saveAuthor(author);
+        saved.setLastName("cruse");
+
+        var updated = authorDao.updateAuthor(saved);
+        assertThat(updated.getLastName()).isEqualTo("cruse");
+    }
 }
