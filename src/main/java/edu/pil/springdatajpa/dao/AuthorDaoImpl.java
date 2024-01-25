@@ -70,6 +70,38 @@ public class AuthorDaoImpl implements AuthorDao {
         return null;
     }
 
+    @Override
+    public Author saveAuthor(Author author) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = dataSource.getConnection();
+            ps = connection.prepareStatement("INSERT INTO author (first_name, last_name)  VALUES (?, ?)");
+            ps.setString(1, author.getFirstName());
+            ps.setString(2, author.getLastName());
+            ps.execute();
+
+            var statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("SELECT LAST_INSERT_ID()"); // works only for MySQL db
+
+            if (resultSet.next())
+                return this.getById(resultSet.getLong(1));
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                closeAll(connection, ps, resultSet);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     private Author getAuthorFromResultSet(ResultSet resultSet) throws SQLException {
         var author = new Author();
         author.setId(resultSet.getLong("id"));

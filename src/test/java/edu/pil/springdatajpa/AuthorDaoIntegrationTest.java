@@ -2,6 +2,7 @@ package edu.pil.springdatajpa;
 
 import edu.pil.springdatajpa.dao.AuthorDao;
 import edu.pil.springdatajpa.dao.AuthorDaoImpl;
+import edu.pil.springdatajpa.domain.Author;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -32,5 +33,18 @@ public class AuthorDaoIntegrationTest {
         var author = authorDao.findAuthorByName("Robert", "Martin");
         System.out.println("author_id = " + author.getId());
         assertThat(author).isNotNull();
+    }
+    @Test
+    void saveAuthorTest() {
+        var savedAuthor = new Author();
+        savedAuthor.setFirstName("Tom");
+        savedAuthor.setLastName("Cruse");
+
+        System.out.println("savedAuthor.getId() = " + savedAuthor.getId());
+
+        var fetchedAuthor = authorDao.saveAuthor(savedAuthor);
+        assertThat(fetchedAuthor).isNotNull();
+
+        System.out.println("fetchedAuthor.getId() = " + fetchedAuthor.getId());
     }
 }
