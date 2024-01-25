@@ -44,8 +44,8 @@ public class AuthorDaoIntegrationTest {
 
         var fetchedAuthor = authorDao.saveAuthor(savedAuthor);
         assertThat(fetchedAuthor).isNotNull();
-
         System.out.println("fetchedAuthor.getId() = " + fetchedAuthor.getId());
+        authorDao.deleteAuthorById(fetchedAuthor.getId());
     }
     @Test
     void updateAuthorTest() {
@@ -58,5 +58,15 @@ public class AuthorDaoIntegrationTest {
 
         var updated = authorDao.updateAuthor(saved);
         assertThat(updated.getLastName()).isEqualTo("cruse");
+        authorDao.deleteAuthorById(updated.getId());
+    }
+    @Test
+    void deleteAuthorTest() {
+
+        var saved = authorDao.saveAuthor(new Author("tom", "cruse"));
+        authorDao.deleteAuthorById(saved.getId());
+
+        var deleted = authorDao.getById(saved.getId());
+        assertThat(deleted).isEqualTo(null);
     }
 }
