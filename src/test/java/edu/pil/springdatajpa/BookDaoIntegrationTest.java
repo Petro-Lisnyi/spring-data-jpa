@@ -1,5 +1,6 @@
 package edu.pil.springdatajpa;
 
+import edu.pil.springdatajpa.dao.AuthorDao;
 import edu.pil.springdatajpa.dao.BookDao;
 import edu.pil.springdatajpa.dao.BookDaoImpl;
 import edu.pil.springdatajpa.domain.Author;
@@ -8,20 +9,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ActiveProfiles("local")
-@DataJpaTest
+//@DataJpaTest
 @Import(BookDaoImpl.class)
 //@ComponentScan(basePackages = {"edu.pil.springdatajpa.dao"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
 public class BookDaoIntegrationTest {
 
     @Autowired
     BookDao bookDao;
+    @Autowired
+    AuthorDao authorDao;
 
     @Test
     void getBookTest() {
@@ -38,10 +43,20 @@ public class BookDaoIntegrationTest {
 
     @Test
     void saveBookTest() {
-        var savedBook = bookDao.saveBook(new Book("Harnessing Hibernate",
-                "978-0-596-51772-4", "James Elliot, Tim O'Brien"));
+        var book = new Book("Harnessing Hibernate",
+                "978-0-596-51772-4", "James Elliot, Tim O'Brien");
+        var author = new Author("James", "Elliot");
+        var savedAuthor = authorDao.saveAuthor(author);
+        if (savedAuthor != null)
+            book.setAuthor(savedAuthor);
+        var savedBook = bookDao.saveBook(book);
         assertThat(savedBook).isNotNull();
-        bookDao.deleteBookById(savedBook.getId());
+        //cleanup db
+        if (savedBook != null)
+            bookDao.deleteBookById(savedBook.getId());
+        if (savedAuthor != null)
+            authorDao.deleteAuthorById(savedAuthor.getId());
+
     }
 
     @Test

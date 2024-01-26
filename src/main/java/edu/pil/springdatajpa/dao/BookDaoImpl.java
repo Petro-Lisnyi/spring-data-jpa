@@ -1,6 +1,7 @@
 package edu.pil.springdatajpa.dao;
 
 import edu.pil.springdatajpa.domain.Book;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -11,9 +12,11 @@ import java.util.Optional;
 public class BookDaoImpl implements BookDao {
 
     private final DataSource dataSource;
+    private final AuthorDao authorDao;
 
-    public BookDaoImpl(DataSource dataSource) {
+    public BookDaoImpl(DataSource dataSource, AuthorDao authorDao) {
         this.dataSource = dataSource;
+        this.authorDao = authorDao;
     }
 
     @Override
@@ -74,10 +77,16 @@ public class BookDaoImpl implements BookDao {
         Statement statement = null;
         try {
             connection = dataSource.getConnection();
-            ps = connection.prepareStatement("INSERT INTO  book (title, isbn, publisher) VALUES (?, ?, ?)");
+            ps = connection.prepareStatement("INSERT INTO  book (title, isbn, publisher, author_id) VALUES (?, ?, ?, ?)");
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getIsbn());
             ps.setString(3, book.getPublisher());
+
+            var author = book.getAuthor();
+            if (author != null)
+                ps.setLong(4, author.getId());
+            else
+                ps.setNull(4, -5);
             ps.execute();
 
             statement = connection.createStatement();
@@ -105,11 +114,15 @@ public class BookDaoImpl implements BookDao {
         PreparedStatement ps = null;
         try {
             connection = dataSource.getConnection();
-            ps = connection.prepareStatement("UPDATE  book set isbn = ?, title = ?, publisher = ? where book.id = ?");
+            ps = connection.prepareStatement("UPDATE  book set isbn = ?, title = ?, publisher = ?, author_id = ? where book.id = ?");
             ps.setString(1, book.getIsbn());
             ps.setString(2, book.getTitle());
             ps.setString(3, book.getPublisher());
-            ps.setLong(4, book.getId());
+            ps.setLong(5, book.getId());
+            if (book.getAuthor() != null)
+                ps.setLong(4, book.getAuthor().getId());
+            else
+                ps.setNull(4, -5);
             ps.execute();
 
         } catch (SQLException e) {
@@ -151,7 +164,7 @@ public class BookDaoImpl implements BookDao {
         book.setTitle(resultSet.getString("title"));
         book.setIsbn(resultSet.getString("isbn"));
         book.setPublisher(resultSet.getString("publisher"));
-        book.setAuthorId(resultSet.getLong("author_id"));
+        book.setAuthor(authorDao.getById(resultSet.getLong("author_id")));
         return book;
     }
 

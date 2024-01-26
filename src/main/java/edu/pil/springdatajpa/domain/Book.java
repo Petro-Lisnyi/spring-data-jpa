@@ -1,9 +1,6 @@
 package edu.pil.springdatajpa.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +18,9 @@ public class Book {
     private String title;
     private String isbn;
     private String publisher;
-    private Long authorId;
+
+    @Transient
+    private Author author;
 
     public Book(String title, String isbn, String publisher) {
         this.title = title;
