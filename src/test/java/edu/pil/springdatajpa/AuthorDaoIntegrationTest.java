@@ -7,9 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -27,7 +26,7 @@ public class AuthorDaoIntegrationTest {
 
     @Test
     void getAuthorTest() {
-        var author = authorDao.getById(1L);
+        var author = authorDao.getById(3L);
         assertThat(author).isNotNull();
     }
 
@@ -49,7 +48,6 @@ public class AuthorDaoIntegrationTest {
         var fetchedAuthor = authorDao.saveNewAuthor(savedAuthor);
         assertThat(fetchedAuthor).isNotNull();
         System.out.println("fetchedAuthor.getId() = " + fetchedAuthor.getId());
-//        authorDao.deleteAuthorById(fetchedAuthor.getId());
     }
 
     @Test
@@ -70,6 +68,6 @@ public class AuthorDaoIntegrationTest {
     void deleteAuthorTest() {
         var saved = authorDao.saveNewAuthor(new Author("tom", "cruse"));
         authorDao.deleteAuthorById(saved.getId());
-        assertThrows(EmptyResultDataAccessException.class, () -> authorDao.getById(saved.getId()));
+        assertThrows(TransientDataAccessResourceException.class, () -> authorDao.getById(saved.getId()));
     }
 }

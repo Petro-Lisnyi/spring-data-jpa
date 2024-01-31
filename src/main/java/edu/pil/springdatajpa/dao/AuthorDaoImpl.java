@@ -17,16 +17,18 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author getById(Long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM author where id = ?",
-                getRowMapper(),
-                id);
+        final String SQL = "select author.id as id, first_name, last_name, book.id as book_id, book.isbn, book.publisher, book.title \n" +
+                "from author left outer join book on author.id = book.author_id where author.id = ?";
+
+        return jdbcTemplate.query(SQL, new AuthorExtractor(), id);
     }
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        return jdbcTemplate.queryForObject("SELECT * FROM author where first_name = ? and last_name = ?",
-                getRowMapper(),
-                firstName, lastName);
+        final String SQL = "select author.id as id, first_name, last_name, book.id as book_id, book.isbn, book.publisher, book.title \n" +
+                "from author left outer join book on author.id = book.author_id where author.first_name = ? and author.last_name = ?";
+
+        return jdbcTemplate.query(SQL, new AuthorExtractor(), firstName, lastName);
     }
 
     @Override
