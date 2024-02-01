@@ -2,8 +2,6 @@ package edu.pil.springdatajpa;
 
 import edu.pil.springdatajpa.dao.AuthorDao;
 import edu.pil.springdatajpa.dao.AuthorDaoImpl;
-import edu.pil.springdatajpa.dao.BookDao;
-import edu.pil.springdatajpa.dao.BookDaoImpl;
 import edu.pil.springdatajpa.domain.Author;
 import edu.pil.springdatajpa.domain.Book;
 import org.junit.jupiter.api.Test;

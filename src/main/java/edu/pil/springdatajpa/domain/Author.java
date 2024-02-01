@@ -17,9 +17,6 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Transient
-    private List<Book> books;
-
     private String firstName;
     private String lastName;
 
