@@ -39,15 +39,18 @@ public class AuthorDaoIntegrationTest {
 
     @Test
     void saveAuthorTest() {
-        var savedAuthor = new Author();
-        savedAuthor.setFirstName("Tom");
-        savedAuthor.setLastName("Cruse");
+        var author = new Author();
+        author.setFirstName("Tom");
+        author.setLastName("Cruse");
 
+        System.out.println("author.getId() = " + author.getId());
+
+        var savedAuthor = authorDao.saveNewAuthor(author);
+        assertThat(savedAuthor).isNotNull();
+        assertThat(savedAuthor.getId()).isNotNull();
         System.out.println("savedAuthor.getId() = " + savedAuthor.getId());
 
-        var fetchedAuthor = authorDao.saveNewAuthor(savedAuthor);
-        assertThat(fetchedAuthor).isNotNull();
-        System.out.println("fetchedAuthor.getId() = " + fetchedAuthor.getId());
+        authorDao.deleteAuthorById(savedAuthor.getId());
     }
 
     @Test
@@ -61,13 +64,13 @@ public class AuthorDaoIntegrationTest {
 
         var updated = authorDao.updateAuthor(saved);
         assertThat(updated.getLastName()).isEqualTo("cruse");
-        authorDao.deleteAuthorById(updated.getId());
     }
 
     @Test
     void deleteAuthorTest() {
         var saved = authorDao.saveNewAuthor(new Author("tom", "cruse"));
         authorDao.deleteAuthorById(saved.getId());
-        assertThrows(TransientDataAccessResourceException.class, () -> authorDao.getById(saved.getId()));
+        var deleted = authorDao.getById(saved.getId());
+        assertThat(deleted).isNull();
     }
 }
