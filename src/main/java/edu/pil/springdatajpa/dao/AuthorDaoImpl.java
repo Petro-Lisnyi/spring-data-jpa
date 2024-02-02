@@ -3,12 +3,11 @@ package edu.pil.springdatajpa.dao;
 import edu.pil.springdatajpa.domain.Author;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.logging.ErrorManager;
+import java.util.List;
 
 
 @Component
@@ -63,6 +62,17 @@ public class AuthorDaoImpl implements AuthorDao {
         entityManager.remove(author);
         entityManager.flush();
         entityManager.getTransaction().commit();
+    }
+
+    @Override
+    public List<Author> listAuthorsByLastName(String lastName) {
+        try (var entityManager = getEntityManager()) {
+            Query query = entityManager.createQuery("select a from Author a " +
+                    "where a.lastName like :last_name");
+            query.setParameter("last_name", lastName + "%");
+            List<Author> authors = query.getResultList();
+            return authors;
+        }
     }
 
     private EntityManager getEntityManager() {
