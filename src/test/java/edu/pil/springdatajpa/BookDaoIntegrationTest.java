@@ -43,6 +43,12 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
+    void getBookByTitleCriteriaTest() {
+        var book = bookDao.findBookByTitle("Domain-Driven Design");
+        assertThat(book).isNotNull();
+    }
+
+    @Test
     void findByISBNTest() {
         var book = new Book("Hibernate",
                 "978-0-596-51772-3", "James Elliot, Tim O'Brien");
