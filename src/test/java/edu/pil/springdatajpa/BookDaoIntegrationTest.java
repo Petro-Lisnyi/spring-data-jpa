@@ -82,4 +82,11 @@ public class BookDaoIntegrationTest {
         bookDao.deleteBookById(saved.getId());
         assertThat(bookDao.getById(saved.getId())).isNull();
     }
+
+    @Test
+    void findAllTest() {
+        var books = bookDao.findAll();
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isGreaterThan(0);
+    }
 }

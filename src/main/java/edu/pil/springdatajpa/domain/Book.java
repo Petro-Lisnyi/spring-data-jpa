@@ -1,17 +1,16 @@
 package edu.pil.springdatajpa.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
-@Entity
 @Data
 @NoArgsConstructor
+@Entity
+@NamedQueries({
+        @NamedQuery(name = "book_find_all", query = "from Book"),
+        @NamedQuery(name = "book_find_by_title", query = "select a from Book a where a.title = :title")
+})
 public class Book {
 
     @Id
