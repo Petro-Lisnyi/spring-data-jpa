@@ -9,8 +9,9 @@ import java.util.List;
 
 @Setter
 @Getter
-@Entity
 @NoArgsConstructor
+@NamedQuery(name = "author_find_all", query = "from Author")
+@Entity
 public class Author {
 
     @Id

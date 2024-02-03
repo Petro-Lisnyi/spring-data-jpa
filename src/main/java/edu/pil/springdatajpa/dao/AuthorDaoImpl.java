@@ -75,6 +75,14 @@ public class AuthorDaoImpl implements AuthorDao {
         }
     }
 
+    @Override
+    public List<Author> findAll() {
+        try (var entityManager = getEntityManager()) {
+            TypedQuery<Author> authorFindAllQuery = entityManager.createNamedQuery("author_find_all", Author.class);
+            return authorFindAllQuery.getResultList();
+        }
+    }
+
     private EntityManager getEntityManager() {
         return entityManagerFactory.createEntityManager();
     }

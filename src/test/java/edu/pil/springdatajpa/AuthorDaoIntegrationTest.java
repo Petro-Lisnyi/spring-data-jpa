@@ -77,4 +77,10 @@ public class AuthorDaoIntegrationTest {
         assertThat(authors).isNotNull();
         assertThat(authors.size()).isGreaterThan(0);
     }
+    @Test
+    void findAllTest() {
+        var authors = authorDao.findAll();
+        assertThat(authors).isNotNull();
+        assertThat(authors.size()).isGreaterThan(0);
+    }
 }
