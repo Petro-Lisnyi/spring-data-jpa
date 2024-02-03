@@ -78,6 +78,11 @@ public class AuthorDaoIntegrationTest {
         assertThat(authors.size()).isGreaterThan(0);
     }
     @Test
+    void findAuthorByNameCriteriaTest() {
+        var author = authorDao.findAuthorByNameCriteria("Robert", "Martin");
+        assertThat(author).isNotNull();
+    }
+    @Test
     void findAllTest() {
         var authors = authorDao.findAll();
         assertThat(authors).isNotNull();

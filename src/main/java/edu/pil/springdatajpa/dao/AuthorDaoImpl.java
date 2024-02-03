@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -79,6 +80,29 @@ public class AuthorDaoImpl implements AuthorDao {
         try (var entityManager = getEntityManager()) {
             TypedQuery<Author> authorFindAllQuery = entityManager.createNamedQuery("author_find_all", Author.class);
             return authorFindAllQuery.getResultList();
+        }
+    }
+
+    @Override
+    public Author findAuthorByNameCriteria(String firstName, String lastName) {
+        try (EntityManager entityManager = getEntityManager()) {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Author> criteriaQuery = criteriaBuilder.createQuery(Author.class);
+
+            Root<Author> authorRoot = criteriaQuery.from(Author.class);
+
+            ParameterExpression<String> firstNameParam = criteriaBuilder.parameter(String.class);
+            ParameterExpression<String> lastNameParam = criteriaBuilder.parameter(String.class);
+
+            Predicate firstNamePredicate = criteriaBuilder.equal(authorRoot.get("firstName"), firstNameParam);
+            Predicate lastNamePredicate = criteriaBuilder.equal(authorRoot.get("lastName"), lastNameParam);
+
+            criteriaQuery.select(authorRoot).where(criteriaBuilder.and(firstNamePredicate, lastNamePredicate));
+
+            TypedQuery<Author> query = entityManager.createQuery(criteriaQuery);
+            query.setParameter(firstNameParam, firstName);
+            query.setParameter(lastNameParam, lastName);
+            return query.getSingleResult();
         }
     }
 
