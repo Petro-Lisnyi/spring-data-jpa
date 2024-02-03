@@ -43,6 +43,17 @@ public class BookDaoIntegrationTest {
     }
 
     @Test
+    void findByISBNTest() {
+        var book = new Book("Hibernate",
+                "978-0-596-51772-3", "James Elliot, Tim O'Brien");
+        var saved = bookDao.saveBook(book);
+        Book fetched = bookDao.findByISBN(saved.getIsbn());
+        assertThat(fetched).isNotNull();
+
+        bookDao.deleteBookById(fetched.getId());
+    }
+
+    @Test
     void saveBookTest() {
         var book = new Book("Harnessing Hibernate",
                 "978-0-596-51772-4", "James Elliot, Tim O'Brien");

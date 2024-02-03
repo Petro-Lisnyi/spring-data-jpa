@@ -31,6 +31,15 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
+    public Book findByISBN(String isbn) {
+        try (var entityManager = getEntityManager()) {
+            var typedQuery = entityManager.createQuery("select b from Book b where b.isbn = :isbn", Book.class);
+            typedQuery.setParameter("isbn", isbn);
+            return typedQuery.getSingleResult();
+        }
+    }
+
+    @Override
     public Book saveBook(Book book) {
         var entityManager = getEntityManager();
         entityManager.getTransaction().begin();

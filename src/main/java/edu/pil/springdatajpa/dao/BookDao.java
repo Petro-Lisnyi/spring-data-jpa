@@ -7,6 +7,8 @@ public interface BookDao {
 
     Book findBookByTitle(String title);
 
+    Book findByISBN(String isbn);
+
     Book saveBook(Book book);
 
     Book updateBook(Book book);
