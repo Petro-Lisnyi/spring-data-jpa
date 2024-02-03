@@ -83,6 +83,11 @@ public class AuthorDaoIntegrationTest {
         assertThat(author).isNotNull();
     }
     @Test
+    void findAuthorByName_NativeQueryTest() {
+        var author = authorDao.findAuthorByName_NativeQuery("Robert", "Martin");
+        assertThat(author).isNotNull();
+    }
+    @Test
     void findAllTest() {
         var authors = authorDao.findAll();
         assertThat(authors).isNotNull();
