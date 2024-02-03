@@ -10,6 +10,7 @@ public interface BookDao {
     Book findBookByTitle(String title);
 
     Book findBookByTitleCriteria(String title);
+    Book getBookByTitle_NativeQuery(String title);
 
     Book findByISBN(String isbn);
 

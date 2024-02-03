@@ -44,7 +44,13 @@ public class BookDaoIntegrationTest {
 
     @Test
     void getBookByTitleCriteriaTest() {
-        var book = bookDao.findBookByTitle("Domain-Driven Design");
+        var book = bookDao.findBookByTitleCriteria("Domain-Driven Design");
+        assertThat(book).isNotNull();
+    }
+
+    @Test
+    void getBookByTitle_NativeQueryTest() {
+        var book = bookDao.getBookByTitle_NativeQuery("Domain-Driven Design");
         assertThat(book).isNotNull();
     }
 
