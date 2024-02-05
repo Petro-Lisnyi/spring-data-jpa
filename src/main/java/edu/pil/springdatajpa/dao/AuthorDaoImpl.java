@@ -2,10 +2,7 @@ package edu.pil.springdatajpa.dao;
 
 import edu.pil.springdatajpa.domain.Author;
 import edu.pil.springdatajpa.repositories.AuthorRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
@@ -28,7 +25,8 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author findAuthorByName(String firstName, String lastName) {
-        return authorRepository.findAuthorByFirstNameAndLastName(firstName, lastName);
+        return authorRepository.findAuthorByFirstNameAndLastName(firstName, lastName)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

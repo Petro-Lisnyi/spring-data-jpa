@@ -3,6 +3,7 @@ package edu.pil.springdatajpa;
 import edu.pil.springdatajpa.dao.AuthorDao;
 import edu.pil.springdatajpa.dao.AuthorDaoImpl;
 import edu.pil.springdatajpa.domain.Author;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -38,6 +39,11 @@ public class AuthorDaoIntegrationTest {
     }
 
     @Test
+    void getAuthorByNameShouldThrowExceptionTest() {
+        assertThrows(EntityNotFoundException.class, () -> authorDao.findAuthorByName("Robert0", "Martin0"));
+    }
+
+    @Test
     void saveAuthorTest() {
         var author = new Author();
         author.setFirstName("Tom");
@@ -70,6 +76,6 @@ public class AuthorDaoIntegrationTest {
     void deleteAuthorTest() {
         var saved = authorDao.saveNewAuthor(new Author("tom", "cruse"));
         authorDao.deleteAuthorById(saved.getId());
-        assertThrows(JpaObjectRetrievalFailureException.class, () -> authorDao.getById(saved.getId()) );
+        assertThrows(JpaObjectRetrievalFailureException.class, () -> authorDao.getById(saved.getId()));
     }
 }
