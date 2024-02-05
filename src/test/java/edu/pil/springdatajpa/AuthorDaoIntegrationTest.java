@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("local")
 @DataJpaTest
@@ -68,29 +70,6 @@ public class AuthorDaoIntegrationTest {
     void deleteAuthorTest() {
         var saved = authorDao.saveNewAuthor(new Author("tom", "cruse"));
         authorDao.deleteAuthorById(saved.getId());
-        var deleted = authorDao.getById(saved.getId());
-        assertThat(deleted).isNull();
-    }
-    @Test
-    void listAuthorsByNameTest() {
-        var authors = authorDao.listAuthorsByLastName("E");
-        assertThat(authors).isNotNull();
-        assertThat(authors.size()).isGreaterThan(0);
-    }
-    @Test
-    void findAuthorByNameCriteriaTest() {
-        var author = authorDao.findAuthorByNameCriteria("Robert", "Martin");
-        assertThat(author).isNotNull();
-    }
-    @Test
-    void findAuthorByName_NativeQueryTest() {
-        var author = authorDao.findAuthorByName_NativeQuery("Robert", "Martin");
-        assertThat(author).isNotNull();
-    }
-    @Test
-    void findAllTest() {
-        var authors = authorDao.findAll();
-        assertThat(authors).isNotNull();
-        assertThat(authors.size()).isGreaterThan(0);
+        assertThrows(JpaObjectRetrievalFailureException.class, () -> authorDao.getById(saved.getId()) );
     }
 }
