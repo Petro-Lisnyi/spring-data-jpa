@@ -1,6 +1,7 @@
 package edu.pil.springdatajpa.dao;
 
 import edu.pil.springdatajpa.domain.Book;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,12 @@ public class BookDaoImpl implements BookDao {
     public List<Book> findAllBooks(int pageSize, int offset) {
         return jdbcTemplate.query("SELECT * FROM book limit ? offset ?",
                 getBookMapper(), pageSize, offset);
+    }
+
+    @Override
+    public List<Book> findAllBooks(Pageable pageable) {
+        return jdbcTemplate.query("SELECT * FROM book limit ? offset ?",
+                getBookMapper(), pageable.getPageSize(), pageable.getOffset());
     }
 
     private RowMapper<Book> getBookMapper() {
