@@ -30,4 +30,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("select b from Book b where b.title = :title")
     Book findBookByTitleWithQueryNamed(@Param("title") String title);
+
+
+    @Query(value = "select * from book where title = :title", nativeQuery = true)
+    Book findBookByTitleNativeQuery(@Param("title") String title);
 }
