@@ -92,4 +92,25 @@ public class BookDaoIntegrationTest {
         assertThat(books).isNotNull();
         assertThat(books.size()).isGreaterThan(2);
     }
+
+    @Test
+    void findAllBooksPage1Test() {
+        List<Book> books = bookDao.findAllBooks(2, 0);
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(2);
+    }
+
+    @Test
+    void findAllBooksPage2Test() {
+        List<Book> books = bookDao.findAllBooks(2, 2);
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(2);
+    }
+
+    @Test
+    void findAllBooksPage10Test() {
+        List<Book> books = bookDao.findAllBooks(2, 18)  ;
+        assertThat(books).isNotNull();
+        assertThat(books.size()).isEqualTo(0);
+    }
 }
