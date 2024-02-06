@@ -3,6 +3,7 @@ package edu.pil.springdatajpa.repositories;
 
 import edu.pil.springdatajpa.domain.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Async;
 
@@ -22,4 +23,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Async
     Future<Book> queryByTitle(String title);
+
+    @Query("select b from Book b where b.title = ?1")
+    Book findBookByTitleWithQuery(String title);
 }
