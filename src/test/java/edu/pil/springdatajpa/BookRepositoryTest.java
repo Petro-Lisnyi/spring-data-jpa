@@ -80,4 +80,11 @@ public class BookRepositoryTest {
 
         assertThat(book).isNotNull();
     }
+
+    @Test
+    void testBookJPANamedQuery() {
+        var book = bookRepository.jpaNamed("Clean Code");
+
+        assertThat(book).isNotNull();
+    }
 }
