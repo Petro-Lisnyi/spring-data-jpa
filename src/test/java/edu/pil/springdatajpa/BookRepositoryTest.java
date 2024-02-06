@@ -66,4 +66,11 @@ public class BookRepositoryTest {
 
         assertNotNull(book);
     }
+
+    @Test
+    void testBookQueryNamed() {
+        var book = bookRepository.findBookByTitleWithQueryNamed("Clean Code");
+
+        assertThat(book).isNotNull();
+    }
 }
