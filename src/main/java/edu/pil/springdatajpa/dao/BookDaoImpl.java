@@ -1,10 +1,11 @@
 package edu.pil.springdatajpa.dao;
 
-import edu.pil.springdatajpa.domain.Author;
 import edu.pil.springdatajpa.domain.Book;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
@@ -18,12 +19,12 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book getById(Long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM book WHERE id = ?", getRowMapper(), id);
+        return jdbcTemplate.queryForObject("SELECT * FROM book WHERE id = ?", getBookMapper(), id);
     }
 
     @Override
     public Book findBookByTitle(String title) {
-        return jdbcTemplate.queryForObject("SELECT * FROM book WHERE title = ?", getRowMapper(), title);
+        return jdbcTemplate.queryForObject("SELECT * FROM book WHERE title = ?", getBookMapper(), title);
     }
 
     @Override
@@ -46,7 +47,12 @@ public class BookDaoImpl implements BookDao {
         jdbcTemplate.update("DELETE FROM book WHERE id = ?", id);
     }
 
-    private RowMapper<Book> getRowMapper() {
+    @Override
+    public List<Book> findAllBooks() {
+        return jdbcTemplate.query("SELECT * FROM book", getBookMapper());
+    }
+
+    private RowMapper<Book> getBookMapper() {
         return new BookMapper();
     }
 }
