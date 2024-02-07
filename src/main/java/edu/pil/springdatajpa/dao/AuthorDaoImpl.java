@@ -1,9 +1,12 @@
 package edu.pil.springdatajpa.dao;
 
 import edu.pil.springdatajpa.domain.Author;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
@@ -49,6 +52,11 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public void deleteAuthorById(Long id) {
         jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
+    }
+
+    @Override
+    public List<Author> findAllAuthorsByLastName(String lastName, Pageable pageable) {
+        return null;
     }
 
     private RowMapper<Author> getRowMapper() {
