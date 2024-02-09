@@ -4,14 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @NoArgsConstructor
-@Entity
 @NamedQuery(name = "Book.jpaNamed", query = "from Book b where b.title = :title")
-//@NamedQueries({
-//        @NamedQuery(name = "book_find_all", query = "from Book"),
-//        @NamedQuery(name = "book_find_by_title", query = "select a from Book a where a.title = :title")
-//})
 public class Book {
 
     @Id

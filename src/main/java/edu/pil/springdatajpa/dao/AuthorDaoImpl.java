@@ -2,9 +2,9 @@ package edu.pil.springdatajpa.dao;
 
 import edu.pil.springdatajpa.domain.Author;
 import edu.pil.springdatajpa.repositories.AuthorRepository;
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.List;
 
 @Component
 public class AuthorDaoImpl implements AuthorDao {
+
     private final AuthorRepository authorRepository;
 
     public AuthorDaoImpl(AuthorRepository authorRepository) {
@@ -37,14 +38,19 @@ public class AuthorDaoImpl implements AuthorDao {
     @Transactional
     @Override
     public Author updateAuthor(Author author) {
-        Author fetched = authorRepository.getById(author.getId());
-        fetched.setFirstName(author.getFirstName());
-        fetched.setLastName(author.getLastName());
-        return authorRepository.save(fetched);
+        Author foundAuthor = authorRepository.getById(author.getId());
+        foundAuthor.setFirstName(author.getFirstName());
+        foundAuthor.setLastName(author.getLastName());
+        return authorRepository.save(foundAuthor);
     }
 
     @Override
     public void deleteAuthorById(Long id) {
         authorRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Author> findAllAuthorsByLastName(String lastName, Pageable pageable) {
+        return authorRepository.findAuthorByLastName(lastName, pageable).getContent();
     }
 }
