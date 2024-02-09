@@ -1,19 +1,17 @@
 package edu.pil.springdatajpa;
 
-import edu.pil.springdatajpa.dao.AuthorDao;
-import edu.pil.springdatajpa.dao.AuthorDaoImpl;
 import edu.pil.springdatajpa.dao.BookDao;
-import edu.pil.springdatajpa.dao.BookDaoImpl;
 import edu.pil.springdatajpa.domain.Author;
 import edu.pil.springdatajpa.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -23,15 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("local")
 @DataJpaTest
-@Import({BookDaoImpl.class, AuthorDaoImpl.class})
-//@ComponentScan(basePackages = {"edu.pil.springdatajpa.dao"})
+//@Import({BookDaoSpring.class})
+@ComponentScan(basePackages = {"edu.pil.springdatajpa.dao"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BookDaoIntegrationTest {
 
+    @Qualifier("bookDaoSpring")
     @Autowired
     BookDao bookDao;
-    @Autowired
-    AuthorDao authorDao;
 
     @Test
     void getBookTest() {
@@ -51,9 +48,6 @@ public class BookDaoIntegrationTest {
         var book = new Book("Harnessing Hibernate",
                 "978-0-596-51772-4", "James Elliot, Tim O'Brien");
         var author = new Author("James", "Elliot");
-        var savedAuthor = authorDao.saveNewAuthor(author);
-        if (savedAuthor != null)
-            book.setAuthorId(savedAuthor.getId());
         var savedBook = bookDao.saveBook(book);
         assertThat(savedBook).isNotNull();
 //        //cleanup db
@@ -68,9 +62,6 @@ public class BookDaoIntegrationTest {
     void updateBookTest() {
         var book = new Book("English For Tech", "anna_gandrabura", "Anna Gandrabura");
         var publisher = book.getPublisher();
-        var savedAuthor = authorDao.saveNewAuthor(new Author(publisher.split(" ")[0], publisher.split(" ")[1]));
-        if(savedAuthor != null)
-            book.setAuthorId(savedAuthor.getId());
         var savedBook = bookDao.saveBook(book);
         savedBook.setIsbn("annglish_");
 
@@ -84,7 +75,7 @@ public class BookDaoIntegrationTest {
         var saved = bookDao.saveBook(new Book());
         bookDao.deleteBookById(saved.getId());
 
-        assertThrows(EmptyResultDataAccessException.class,
+        assertThrows(JpaObjectRetrievalFailureException.class,
                 () -> bookDao.getById(saved.getId()));
     }
 

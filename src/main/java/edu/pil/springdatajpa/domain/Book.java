@@ -1,17 +1,13 @@
 package edu.pil.springdatajpa.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Objects;
 
 @Entity
 @Data
 @NoArgsConstructor
+@NamedQuery(name = "Book.jpaNamed", query = "from Book b where b.title = :title")
 public class Book {
 
     @Id

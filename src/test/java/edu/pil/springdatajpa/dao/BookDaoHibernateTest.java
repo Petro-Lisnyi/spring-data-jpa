@@ -37,15 +37,15 @@ public class BookDaoHibernateTest {
 
         assertThat(books).isNotNull();
         assertThat(books.size()).isEqualTo(5);
-        assertThat(books.get(0).getTitle()).isEqualTo("Clean Code");
     }
 
     @Test
     void findAllBooksSortByTitle() {
-        List<Book> books = bookDao.findAllBooks(PageRequest.of(0, 5,
-                Sort.by(Sort.Order.desc("title"))));
+        List<Book> books = bookDao.findAllBooksSortByTitle(PageRequest.of(0, 5,
+                Sort.by(Sort.Order.asc("title"))));
 
         assertThat(books).isNotNull();
         assertThat(books.size()).isEqualTo(5);
+        assertThat(books.get(0).getTitle()).isEqualTo("Clean Code");
     }
 }
