@@ -3,12 +3,13 @@ package edu.pil.springdatajpa;
 import edu.pil.springdatajpa.dao.AuthorDao;
 import edu.pil.springdatajpa.dao.AuthorDaoImpl;
 import edu.pil.springdatajpa.domain.Author;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.TransientDataAccessResourceException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -38,16 +39,24 @@ public class AuthorDaoIntegrationTest {
     }
 
     @Test
-    void saveAuthorTest() {
-        var savedAuthor = new Author();
-        savedAuthor.setFirstName("Tom");
-        savedAuthor.setLastName("Cruse");
+    void getAuthorByNameShouldThrowExceptionTest() {
+        assertThrows(EntityNotFoundException.class, () -> authorDao.findAuthorByName("Robert0", "Martin0"));
+    }
 
+    @Test
+    void saveAuthorTest() {
+        var author = new Author();
+        author.setFirstName("Tom");
+        author.setLastName("Cruse");
+
+        System.out.println("author.getId() = " + author.getId());
+
+        var savedAuthor = authorDao.saveNewAuthor(author);
+        assertThat(savedAuthor).isNotNull();
+        assertThat(savedAuthor.getId()).isNotNull();
         System.out.println("savedAuthor.getId() = " + savedAuthor.getId());
 
-        var fetchedAuthor = authorDao.saveNewAuthor(savedAuthor);
-        assertThat(fetchedAuthor).isNotNull();
-        System.out.println("fetchedAuthor.getId() = " + fetchedAuthor.getId());
+        authorDao.deleteAuthorById(savedAuthor.getId());
     }
 
     @Test
@@ -61,13 +70,12 @@ public class AuthorDaoIntegrationTest {
 
         var updated = authorDao.updateAuthor(saved);
         assertThat(updated.getLastName()).isEqualTo("cruse");
-        authorDao.deleteAuthorById(updated.getId());
     }
 
     @Test
     void deleteAuthorTest() {
         var saved = authorDao.saveNewAuthor(new Author("tom", "cruse"));
         authorDao.deleteAuthorById(saved.getId());
-        assertThrows(TransientDataAccessResourceException.class, () -> authorDao.getById(saved.getId()));
+        assertThrows(JpaObjectRetrievalFailureException.class, () -> authorDao.getById(saved.getId()));
     }
 }

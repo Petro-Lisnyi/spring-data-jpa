@@ -10,8 +10,13 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@Entity
 @NoArgsConstructor
+@Entity
+//@NamedQueries({
+//        @NamedQuery(name = "author_find_all", query = "from Author"),
+//        @NamedQuery(name = "find_author_by_name",
+//                query = "select a from Author a where a.firstName = :first_name and a.lastName = :last_name")
+//})
 public class Author {
 
     @Id
