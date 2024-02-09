@@ -3,6 +3,7 @@ package edu.pil.springdatajpa.dao;
 import edu.pil.springdatajpa.domain.Book;
 import edu.pil.springdatajpa.repositories.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -74,6 +75,7 @@ public class BookDaoSpring implements BookDao {
 
     @Override
     public List<Book> findAllBooksSortByTitle(Pageable pageable) {
-        return null;
+        Page<Book> bookPage = bookRepository.findAll(pageable);
+        return bookPage.getContent();
     }
 }

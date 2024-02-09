@@ -131,7 +131,7 @@ public class BookDaoIntegrationTest {
     @Test
     void findAllBooksPage1_SortByTitleTest() {
         List<Book> books = bookDao.findAllBooksSortByTitle(PageRequest.of(0, 4,
-                Sort.by(Sort.Order.desc("title"))))  ;
+                Sort.by(Sort.Order.asc("title"))))  ;
         assertThat(books).isNotNull();
         assertThat(books.size()).isEqualTo(4);
     }
